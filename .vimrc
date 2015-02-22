@@ -80,7 +80,7 @@ nnoremap <space> za
 set foldlevelstart=10
 
 " Shortcut Remmaping
-inoremap kj <Esc>       
+inoremap kj <Esc>
 vnoremap kj <Esc>
 
 " Movement
