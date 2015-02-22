@@ -73,11 +73,11 @@ set incsearch
 set hlsearch
 
 " Folding
-" set foldmethod=indent
-" set foldnestmax=10
-" set foldenable
-" nnoremap <space> za
-" set foldlevelstart=10
+set foldmethod=indent
+set foldnestmax=10
+set foldenable
+nnoremap <space> za
+set foldlevelstart=10
 
 " Shortcut Remmaping
 inoremap kj <Esc>       
