@@ -9,7 +9,13 @@ Plugin 'gmarik/Vundle.vim'
 
 Plugin 'sjl/badwolf'
 Plugin 'scrooloose/nerdtree'
-Plugin 'kien/ctrlp'
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-fugitive'
+Plugin 'kien/ctrlp.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'bling/vim-airline'
+Plugin 'bronson/vim-trailing-whitespace'
 
 call vundle#end()
 filetype plugin indent on
@@ -19,6 +25,24 @@ let g:ctrlp_atch_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_js_checkers = ['jshint']
+
+" Fugitive
+set statusline+=%{fugitive#statusline()}
+
+" Vim Airline
+set laststatus=2
+
 " Colors
 syntax enable
 colorscheme badwolf
@@ -26,7 +50,7 @@ let g:badwolf_darkgutter=1
 
 " Misc
 set ttyfast
-set nu
+set backspace=indent,eol,start
 
 " Spaces & Tabs
 set tabstop=2
@@ -41,6 +65,7 @@ set showcmd
 set cursorline
 set wildmenu
 set showmatch
+match Error /\%81v.\+/
 
 " Searching
 set ignorecase
@@ -48,18 +73,19 @@ set incsearch
 set hlsearch
 
 " Folding
-set foldmethod=indent
-set foldnestmax=10
-set foldenable
-nnoremap <space> za
-set foldlevelstart=10
+" set foldmethod=indent
+" set foldnestmax=10
+" set foldenable
+" nnoremap <space> za
+" set foldlevelstart=10
 
 " Shortcut Remmaping
-imap kj <Esc>       " Change nasty escape button, way too far away
+inoremap kj <Esc>       
+vnoremap kj <Esc>
 
 " Movement
-nnoremap j gj
-nnoremap k gk
+" nnoremap <buffer> <silent> j gj
+" nnoremap <buffer> <silent> k gk
 map <C-h> :wincmd h<CR>
 map <C-j> :wincmd j<CR>
 map <C-k> :wincmd k<CR>
@@ -67,14 +93,11 @@ map <C-l> :wincmd l<CR>
 
 " Leader Shortcuts
 let mapleader=","
+let g:mapleader=","
 nnoremap <leader>w :NERDTree<CR>
 nnoremap <leader>l :call ToggleNumber()<CR>
-nnoremap <leader><space> :hohlsearch<CR>
-
-augroup configgroup
-  autocmd!
-  autocmd BufWritePre *.py,*.js,*.txt,*.java,*.md :call <SIC>StripTrailingWhitespaces()
-augroup END
+nnoremap <leader><space> <silent> :nohlsearch<CR>
+nnoremap <leader>t :TagbarToggle<CR>
 
 " Custom Functions
 function! ToggleNumber()
@@ -86,26 +109,10 @@ function! ToggleNumber()
   endif
 endfunc
 
-" strips trailing whitespace at the end of files. this
-" " is called on buffer write in the autogroup above.
-function! <SID>StripTrailingWhitespaces()
-" save last search & cursor position
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
-  %s/\s\+$//e
-  let @/=_s
-  call cursor(l, c)
-endfunction
-
-function! <SID>CleanFile()
-  " Preparation: save last search, and cursor position.
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
-  " Do the business:
-  %!git stripspace
-  " Clean up: restore previous search history, and cursor position
-  let @/=_s
-  call cursor(l, c)
-endfunction
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+" Remember info about open buffers on close
+set viminfo^=%
