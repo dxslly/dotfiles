@@ -16,6 +16,10 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'bling/vim-airline'
 Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'moll/vim-node'
+Plugin 'burnettk/vim-angular'
+Plugin 'pangloss/vim-javascript'
+Plugin 'othree/javascript-libraries-syntax.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -37,11 +41,25 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_js_checkers = ['jshint']
 
+let g:syntastic_html_tidy_ignore_errors=[
+      \" proprietary attribute \"ng-",
+      \" proprietary attribute \"md-",
+      \"trimming empty <i>",
+      \"trimming empty <span>",
+      \"<input> proprietary attribute \"autocomplete\"",
+      \"proprietary attribute \"role\"",
+      \"proprietary attribute \"hidden\"",
+      \"<img> lacks \"src\" attribute",
+      \]
+
 " Fugitive
 set statusline+=%{fugitive#statusline()}
 
 " Vim Airline
 set laststatus=2
+
+" javascript-libraries-syntax.vim
+let g:used_javascript_libs = 'jquery,angularjs'
 
 " Colors
 syntax enable
@@ -80,12 +98,14 @@ nnoremap <space> za
 set foldlevelstart=10
 
 " Shortcut Remmaping
+cnoremap qq qa
 inoremap kj <Esc>
 vnoremap kj <Esc>
+cnoremap kj <Esc>
 
 " Movement
-" nnoremap <buffer> <silent> j gj
-" nnoremap <buffer> <silent> k gk
+nnoremap <buffer> <silent> j gj
+nnoremap <buffer> <silent> k gk
 map <C-h> :wincmd h<CR>
 map <C-j> :wincmd j<CR>
 map <C-k> :wincmd k<CR>
@@ -96,7 +116,7 @@ let mapleader=","
 let g:mapleader=","
 nnoremap <leader>w :NERDTree<CR>
 nnoremap <leader>l :call ToggleNumber()<CR>
-nnoremap <leader><space> <silent> :nohlsearch<CR>
+nnoremap <leader><space> :nohlsearch<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 " Custom Functions
